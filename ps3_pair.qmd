@@ -26,7 +26,35 @@ np.random.seed(42)
 data = pd.DataFrame(np.random.rand(100), columns=['Random Numbers'])
 
 def preview_data(df):
-    print(df.head())
+    # Get the head of the DataFrame
+    head_data = df.head()
 
-preview_data(data)
+    # Identify the first numeric column for the histogram
+    numeric_cols = df.select_dtypes(include=['number']).columns
+    if len(numeric_cols) > 0:
+        first_numeric_col = numeric_cols[0]
+    else:
+        raise ValueError("The DataFrame does not contain any numeric columns for the histogram.")
+
+    # Create a histogram using Altair
+    histogram = alt.Chart(df).mark_bar().encode(
+        alt.X(first_numeric_col, bin=True),
+        y='count()'
+    ).properties(
+        title=f"Histogram of {first_numeric_col}",
+        width=400,
+        height=300
+    )
+
+    # Return the head of the DataFrame and the histogram plot
+    return [head_data, histogram]
+
+# Call the function and display results
+result = preview_data(data)
+head_data = result[0]
+histogram_plot = result[1]
+
+# Displaying the head data and histogram in a compatible environment
+print(head_data)
+histogram_plot
 ```
