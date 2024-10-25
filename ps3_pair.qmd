@@ -22,15 +22,45 @@ include-before-body:
 ```{python}
 import pandas as pd
 import numpy as np
+import altair as alt
 
 np.random.seed(42)
 data = pd.DataFrame(np.random.rand(100), columns=['Random Numbers'])
 
 def preview_data(df):
-    head_data = df.head()
-    describe_data = df.describe()
-    result = [head_data, describe_data]
-    print(result)
 
-preview_data(data)
+    # Get the head of the DataFrame
+    head_data = df.head()
+
+    describe_data = df.describe()
+    
+
+
+    # Identify the first numeric column for the histogram
+    numeric_cols = df.select_dtypes(include=['number']).columns
+    if len(numeric_cols) > 0:
+        first_numeric_col = numeric_cols[0]
+    else:
+        raise ValueError("The DataFrame does not contain any numeric columns for the histogram.")
+
+    # Create a histogram using Altair
+    histogram = alt.Chart(df).mark_bar().encode(
+        alt.X(first_numeric_col, bin=True),
+        y='count()'
+    ).properties(
+        title=f"Histogram of {first_numeric_col}",
+        width=400,
+        height=300
+    )
+
+    return [head_data, describe_data, histogram]
+
+# Call the function and display results
+result = preview_data(data)
+head_data = result[0]
+describe_data = result[1]
+histogram_plot = result[2]
+
+# Display
+print(result)
 ```
