@@ -1,5 +1,6 @@
 ---
 title: "30538 Problem Set 3: git pair"
+author: "Shuping"
 author: "Cedar"
 format: 
   pdf:
@@ -21,13 +22,19 @@ include-before-body:
 ```{python}
 import pandas as pd
 import numpy as np
+import altair as alt
 
 np.random.seed(42)
 data = pd.DataFrame(np.random.rand(100), columns=['Random Numbers'])
 
 def preview_data(df):
+
     # Get the head of the DataFrame
     head_data = df.head()
+
+    describe_data = df.describe()
+    
+
 
     # Identify the first numeric column for the histogram
     numeric_cols = df.select_dtypes(include=['number']).columns
@@ -46,15 +53,14 @@ def preview_data(df):
         height=300
     )
 
-    # Return the head of the DataFrame and the histogram plot
-    return [head_data, histogram]
+    return [head_data, describe_data, histogram]
 
 # Call the function and display results
 result = preview_data(data)
 head_data = result[0]
-histogram_plot = result[1]
+describe_data = result[1]
+histogram_plot = result[2]
 
-# Displaying the head data and histogram in a compatible environment
-print(head_data)
-histogram_plot
+# Display
+print(result)
 ```
